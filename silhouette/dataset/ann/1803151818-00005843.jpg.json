@@ -1,0 +1,47 @@
+{
+    "description": "",
+    "tags": [
+        {
+            "id": 13430997,
+            "tagId": 27315,
+            "name": "group",
+            "value": "1803151818",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:25:33.721Z",
+            "updatedAt": "2023-12-09T09:25:33.721Z"
+        },
+        {
+            "id": 13430998,
+            "tagId": 27316,
+            "name": "clip",
+            "value": 5,
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:25:33.721Z",
+            "updatedAt": "2023-12-09T09:25:33.721Z"
+        }
+    ],
+    "size": {
+        "height": 800,
+        "width": 600
+    },
+    "objects": [
+        {
+            "id": 96209879,
+            "classId": 6509485,
+            "description": "",
+            "geometryType": "bitmap",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:25:33.722Z",
+            "updatedAt": "2023-12-09T09:25:33.722Z",
+            "tags": [],
+            "classTitle": "human",
+            "bitmap": {
+                "data": "eJwBXAij94lQTkcNChoKAAAADUlIRFIAAAIjAAADFQEDAAAAn7Bm9gAAAAZQTFRFAAAA////pdmf3QAAAAF0Uk5TAEDm2GYAAAgESURBVHic7d1BjuQ0FAbgrulBjQQaD2KBWCALsWDBoo/g3nGMWXKM5AZ9hOmbTBZILJkjeMmKyYIFIKYD1Y1mqiq23/+cPyknba9Ln14S2+8lldgXF2Jzw738I7HZ4c/pyG4YCMHY/5ThrgjlARmGf6Ypl4/KxBPsHpWhnYJc/Y8MnqL0+cZu+NhaipIfy9WB4rMVe6D02Yo7ULJ7zOVw2NpM5fC05I9rexRLl6k0R0qfqRwhucP66ljJPL0cpTlRfJZygmT2u3mUvGF9imT13t0olpsM5ZuR0mcopxc66/SODyjrxFCUy7GScalPR9G+tWrFMpTQAenHY1BRxxJC9LEEFXW3awhK6DLvm06xYUTZeR0llgiiy4+B8ZyhBC/QvnmNEjstutkuhqiUd1FFcamDA1GtmLiiGNWx7q9TEohCcQmlW1ZpUkfUo4plKKkrhBeayQOClSSCzlPRqeUMihGUFlKsoHhIERBMkU4LmB4pSmKeUyiWojiK0kgKNH9TFPFCQ0p6cuEpyHA0stItpViK4mTlLUXpZUVGVqYAnQ7Ia4aiWIryFaDIwxGJ5b5lKHJ25CgIIisNQ5Fn3X27ExQxMT40v4hiVqdImfqaoriqBBuEDO+XULDBKNYeFIUTC5LTSlNuFlCQzLhvXVKxoOIpSr8axVGUZlElPU2tUfk7qYCIUB9SlGcUBatellE+g5U2oRhUSVaZ61Q6iuILUvrZFUtRHKz8UZCSuhnmKE1VQm23tJKo4RVKolZFK++qxFtLUfzmlN8oSrw+fNpKvOJdXonXh59QFPQ++KGVpHRVqYqivaUofVVmVKI1vEqJ1odVISjRVKJSoklAp7Sbi4Wj3FEUvwLlmqK4J67E7ifeqJRY9a1CSEpssuMobwqKpSrBBj+BL0+JJCT4/43HFnnApVQ4RxQpGjjnpSphxVAUe5ZYboLKK4rSKJXuaSiap1LrUHQVZmFKP59iClKuKYqrSvGKFiEpwduJVSvBPxYoinraDSra6oWlhM4uR1FPu8EjQl8WTCtWrYSK76qEX5riKE1VilJCT1X1SEDRT5hVWVrRp4DSFfi10IPWjRRzNuWuIMVXZYWKq0pVVqo0FCUDGSs5CbYqsypdQbEUrWhef6zKipSuKsHWMpTxk5OSlJyZoSRl/Gd5jjJ+Arl2paf0F47iKUfUVaV4ZYRsUMm4Dwi90XMuJfRnS1XCSkNRnFrxVanKRMWcSWmr8kSUAEJS1P/ZBF92Vaf7kpTgS8BqpQ8p6rRWlXDzQcUqlW5zyk1Q0b6LE45FOzWEle8KikVbq86quHMoYUSpxD6SNJRYlErkvChfaluBosxI21PaORVlRlqD4iiKVSkR5OKWEotRKV1E0eWSqugUXbeLKc+tRmljsWxPUV2kGKIrYaKIauaNx+JwJLGeJEcxuJJYf1RxkRKKomxIrYVqC1LwQ0qu2w8rqfVHFb03FYthxEJSfkCV5Nq58IlJKvAYSO/Q0DxZJb2+8SuKYp6sEl9jcN/QzusLUjqKkkRICmft/88LioWkuHKUnaXEsj0FLGEE5ceCFDDfUxRph5IlYxF3R+MoDlLaNPKMooDZsROUW4qCxeIXUUraGupLioINgXQVdAEWq5LyHFLErSA5ikUUcdc4SFkoFigjiTvYQcrvkvI9oryTFGggveskBlHEaepTioLF4iWloSgOQO57hiJuKInlNXEIGEQRh8AvFAWKhXNEogINpF5SoFyS2qHkoX2BKJytIOWNNhuE8QKC5bU7Siwl5TWx5OUoBkH+khQor71vBQV7i0WK5VuKsr68JioOUfqClPS2cRes4WgQRcxI0GMCToHIUcQswFGweyRJ+RpSPCUWScFySU9ROPdr4hBwBSkGUcT5+5aiYA8bJIWT17BYOonZnuIQpZcUu5wiDeqdYSikXPITRYE6r6hAHUZUsKKsZcQiKw1FccspvYBgDxu8FIthxHLxK6KU9JhAVLAS5iVFkWLBOm9HUX6WFIsoviBFnL8NRYGygKhw5m+oECoqC1BiIZUwknJpy4mFNH9DnXchZcHHvKLysgEUMZdAM6+s2JUp8gQDXep2TQo0T3Fi8ZLygqLYghSDKL2kLJipRQXqL5wKhpRjBWPnGApkLKLA74938yvwW+hJxZWj4F9Q9LMrhqEovpWZWylp/3PNd15xxZajqD4Wm1nRfenYRhRTkNJsTTnLl/c+rLitKdrFbfoZFatUwjdahqJwYmnOooQnOyUSruz0izmGFP3uICFFv1lVF1BuKYpVK36MgG/2H7Y+EItemW0tR+yFCEnJWEE0MATAL2QERd/pSEogOxqKYjOUjqKMY3GUWDKQwEAqSNEunBVWcvZkGmckQ1FuKYrNUUbDMUsZZaTmjEpLUe6OkazdK0Z5rSQlZ9YdRgMpUznJa4ahZBQMD+1kIGUq9xTleAhg/3dKStasu2+eonSHSNasO4qlJCVzABwru1tKLJaiNAwF+wRkmVg4Suase6Jkd7oZFLM5xTGU3DxyEkvDULIzwJGS33VLVbJn3WIVW5DyhqHkZ4CjWPKRAyV/vqyKrJjNKZaiNFWZT5mQRwpVpgzGj8qEbERXTEGKoygNRZmCfFBsOcqk/k9WJo2iD0pTjmKmIVTFMpSJ15mqmM0prhxl8iV6ULDlUZaJZVJa3LBiN6e4gpTJSGnKxBxNVbBVBSVFu7FUUEGXlk0rV68ZygvLUCxFcdMRmtJsTiEgg/8XEC+hItePnQ8AAAAASUVORK5CYIJge9gq",
+                "origin": [
+                    53,
+                    11
+                ]
+            }
+        }
+    ]
+}

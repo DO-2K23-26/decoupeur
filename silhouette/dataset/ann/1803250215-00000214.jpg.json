@@ -1,0 +1,47 @@
+{
+    "description": "",
+    "tags": [
+        {
+            "id": 13459935,
+            "tagId": 27315,
+            "name": "group",
+            "value": "1803250215",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:36:08.202Z",
+            "updatedAt": "2023-12-09T09:36:08.202Z"
+        },
+        {
+            "id": 13459936,
+            "tagId": 27316,
+            "name": "clip",
+            "value": 0,
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:36:08.202Z",
+            "updatedAt": "2023-12-09T09:36:08.202Z"
+        }
+    ],
+    "size": {
+        "height": 800,
+        "width": 600
+    },
+    "objects": [
+        {
+            "id": 96224348,
+            "classId": 6509485,
+            "description": "",
+            "geometryType": "bitmap",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:36:08.202Z",
+            "updatedAt": "2023-12-09T09:36:08.202Z",
+            "tags": [],
+            "classTitle": "human",
+            "bitmap": {
+                "data": "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",
+                "origin": [
+                    0,
+                    114
+                ]
+            }
+        }
+    ]
+}

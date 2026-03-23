@@ -1,0 +1,47 @@
+{
+    "description": "",
+    "tags": [
+        {
+            "id": 13456983,
+            "tagId": 27315,
+            "name": "group",
+            "value": "1803280249",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:35:06.672Z",
+            "updatedAt": "2023-12-09T09:35:06.672Z"
+        },
+        {
+            "id": 13456984,
+            "tagId": 27316,
+            "name": "clip",
+            "value": 0,
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:35:06.672Z",
+            "updatedAt": "2023-12-09T09:35:06.672Z"
+        }
+    ],
+    "size": {
+        "height": 800,
+        "width": 600
+    },
+    "objects": [
+        {
+            "id": 96222872,
+            "classId": 6509485,
+            "description": "",
+            "geometryType": "bitmap",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2023-12-09T09:35:06.673Z",
+            "updatedAt": "2023-12-09T09:35:06.673Z",
+            "tags": [],
+            "classTitle": "human",
+            "bitmap": {
+                "data": "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",
+                "origin": [
+                    0,
+                    101
+                ]
+            }
+        }
+    ]
+}
