@@ -12,14 +12,54 @@
 
 // The front slide
 #front-slide(
-  title: "Automatic embezzling using convolutional networks",
+  title: "Automatic background removal using convolutional networks",
   subtitle: [Using _pytorch_],
   authors: "D. Tetu, P. Contat, D. Grasset, T. Radulescu",
   info: [#link("https://github.com/DO-2K23-26/decoupeur")],
 )
 
+// ============================================================
+// INTRODUCTION
+// ============================================================
+
+#slide(title: "Introduction - What's background removal ?", outlined: true)[
+  #figure(
+  image("images/6.jpg", width: 50%),
+  caption: [
+    Foreground extraction of a cat
+  ],
+)
+  *Goal* : Isolate an element from an image as accurately as possible
+]
+
+#slide(title: "Why using machine learning for that ?", outlined: true)[
+  - A lot of different image parameters (lighting, contrast, blurriness...).
+  - A lot of different poses.
+  - An infinity of different backgrounds.
+  - Almost impossible to code an algorithm for every cases.
+]
+
+
 // Custom outline
 #table-of-contents()
+
+// ============================================================
+// State of the art
+// ============================================================
+
+
+#slide(title: "State of the art", outlined: true)[
+  = Real-Time High-Resolution Background Matting [2020]
+  A whitepaper by students at University of Washington
+  
+  #figure(
+  image("images/architecture_state_of_the_art.png", width: 100%),
+  caption: [
+    Architecture of their model
+  ]
+)
+]
+
 
 // ============================================================
 // PRETRAINED SILHOUETTE SECTION
