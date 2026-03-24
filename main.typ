@@ -1,5 +1,7 @@
 #import "@preview/typslides:1.3.2": *
 
+#set bibliography(title: none, full: true)
+
 #show: typslides.with(
   ratio: "16-9",
   theme: "reddy",
@@ -13,7 +15,8 @@
   title: "Automatic background removal using convolutional networks",
   subtitle: [Using _pytorch_],
   authors: "D. Tetu, P. Contat, D. Grasset, T. Radulescu",
-  info: [#link("https://github.com/DO-2K23-26/decoupeur")],
+  info: [#link("https://github.com/DO-2K23-26/decoupeur") \
+    #link("https://huggingface.co/Courtcircuits/decoupeur")],
 )
 
 // ============================================================
@@ -43,7 +46,7 @@
 
 #slide(title: "State of the art", outlined: true)[
   = Real-Time High-Resolution Background Matting [2020]
-  A whitepaper by students at University of Washington
+  Soumyadip Sengupta and Vivek Jayaram and Brian Curless and Steve Seitz and Ira Kemelmacher-Shlizerman #cite(<BMSengupta20>)
 
   #figure(
     image("images/architecture_state_of_the_art.png", width: 100%),
@@ -53,7 +56,7 @@
 
 // ============================================================
 #title-slide[
-  Pretrained Background Remover
+  Pretrained Background Remover (Transfer Learning)
 ]
 
 // --- WHY TRANSFER LEARNING ---
@@ -61,16 +64,15 @@
   #cols(columns: (1fr, 1fr), gutter: 1.5em)[
     *Our dataset:* 34,425 labeled images of people
 
-    *The problem:* U-Net + ResNet34 has *24.4M parameters*. Training from scratch means the model must learn everything from zero: what an edge is, what a texture looks like, what a human silhouette is.
-
-    With only 34K images, that is not enough data to learn all of this reliably.
+    *The challenge:* U-Net with a ResNet34 backbone has *24.4M parameters*. These parameters need to learn visual features from data: edges, textures, object shapes, and human silhouettes.
   ][
-    *Transfer Learning:* we reuse ResNet34 already trained on ImageNet (1.2M images). It already knows how to "see" basic visual features. We just teach it to distinguish humans from background.
+    *Transfer Learning solution:* reuse ResNet34 pretrained on ImageNet (1.2M images). It already recognizes fundamental visual patterns. We only finetune it for human vs. background distinction.
 
     *Benefits:*
-    + Converges in 16 epochs (training took only *~30 minutes* on school GPU nodes)
-    + Better results on limited data
+    + Converges in 16 epochs (~30 minutes on school GPUs)
+    + Better results with limited labeled data
     + Lower compute cost
+    + Improved generalization
   ]
 ]
 
@@ -88,22 +90,11 @@
   A standard CNN classifies a whole image into one category. U-Net is specifically designed for pixel-level segmentation: it outputs a mask of the same size as the input. This makes it the standard architecture for biomedical and human segmentation tasks.
 
   #cols(columns: (1fr, 1fr), gutter: 1.5em)[
-    *Encoder (ResNet34, 5 stages):*
-    + Stage 0: 512x512 #sym.arrow.r 256x256 (64 feature maps)
-    + Stage 1: 256x256 #sym.arrow.r 128x128 (64 maps)
-    + Stage 2: 128x128 #sym.arrow.r 64x64 (128 maps)
-    + Stage 3: 64x64 #sym.arrow.r 32x32 (256 maps)
-    + Stage 4: 32x32 #sym.arrow.r 16x16 (512 maps) — bottleneck
     At each stage: convolutions + ReLU activations + max-pooling halve the spatial size and double the number of feature maps.
   ][
-    *Decoder (4 upsampling blocks):*
-    + 16x16 #sym.arrow.r 32x32 (256 maps)
-    + 32x32 #sym.arrow.r 64x64 (128 maps)
-    + 64x64 #sym.arrow.r 128x128 (64 maps)
-    + 128x128 #sym.arrow.r 512x512 (32 maps) #sym.arrow.r 1 map (sigmoid)
-
     Each decoder block uses transposed convolution to double spatial size, then concatenates with the matching encoder stage output.
-
+  ]
+  #align(center)[
     #framed(title: "Why are they called Skip Connections?")[
       At each level, the encoder output *skips* the bottleneck and connects directly to the corresponding decoder level. This reintroduces the fine spatial details (edges, contours) lost during compression.
     ]
@@ -117,18 +108,12 @@
     + Image size: 512x512
     + Batch size: 16
     + Epochs trained: *16*
-    + Early stopping: patience = 10 (stops if validation *IoU* does not improve for 10 consecutive epochs)
     + Mixed precision (AMP): uses 16-bit floats instead of 32-bit where safe, halving memory usage and significantly speeding up GPU operations, with no accuracy loss
   ][
     *Optimizer: AdamW*
     + Adapts learning rate per parameter automatically
     + Weight decay built-in: penalizes large weights to reduce overfitting
     + More stable convergence than plain SGD on this type of task
-
-    *Scheduler: CosineAnnealingLR*
-    + Learning rate decreases smoothly following a cosine curve over the training run
-    + Avoids large corrections near convergence, where the model is already close to optimal
-    + Prevents oscillating around the minimum at the end of training
   ]
 ]
 
@@ -165,17 +150,63 @@
     + A model predicting all background scores IoU = 0, not 99%
     + Not fooled by class imbalance
 
-    *Why not Dice then?* Dice and IoU measure very similar things (Dice = 2 x IoU / (1 + IoU)), but IoU is the standard reference in every published segmentation paper. We use Dice as the *loss* (because its gradient is better for optimization) and IoU as the *metric* (because it is the community standard for comparison).
   ][
-    #framed(back-color: rgb("f0f0f0"))[
-      #align(center)[
-        #figure(
-          image("images/dice.png", width: 130%),
-          caption: [IoU and Dice illustrated],
-        )
-      ]
+    *Why not Dice then?* Dice and IoU measure very similar things (Dice = 2 x IoU / (1 + IoU)), but IoU is the standard reference in every published segmentation paper. We use Dice as the *loss* (because its gradient is better for optimization) and IoU as the *metric* (because it is the community standard for comparison).
+  ]
+]
+
+// ============================================================
+#title-slide[
+  From-Scratch U-Net
+]
+
+// --- WHY FROM SCRATCH? ---
+#slide(title: "From-Scratch U-Net: Motivation", outlined: true)[
+  In parallel, we trained a *custom U-Net implemented entirely from scratch* in PyTorch, without any pretrained backbone.
+
+  *Goal:* measure the actual contribution of transfer learning by comparing both approaches under identical conditions.
+
+  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
+    *Dataset:*
+    #rect()[Warning: not the same dataset as pretrained model!]
+    + 40,000 paired image/mask samples
+    + Same 512x512 resolution
+    + Same augmentation pipeline
+
+    *Why is this harder without pretraining?*
+    + The model must learn all visual features from zero
+    + Edges, textures, shapes, human contours: nothing is given
+    + Requires more data and more epochs to reach the same quality
+  ][
+    #framed(title: "Key difference vs pretrained")[
+      The pretrained model starts with 21.8M parameters already tuned on 1.2M images. The from-scratch model starts with *31M parameters* all randomly initialized, and must discover structure entirely from the training data.
     ]
   ]
+]
+
+// --- ARCHITECTURE FROM SCRATCH ---
+#slide(title: "Custom U-Net Architecture", outlined: true)[
+  #framed(title: "Parameters: 31,043,521")[
+    More parameters than the pretrained model (24.4M), but all initialized randomly (which makes training harder and slower).
+  ]
+]
+
+// --- TRAINING CONFIG FROM SCRATCH ---
+#slide(title: "Training Configuration (From Scratch)", outlined: true)[
+  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
+    *Setup:*
+    + Image size: 512x512
+    + Batch size: 16
+    + Max epochs: 50
+  ][
+    *Optimizer: Adam*
+    + Adapts the learning rate per parameter automatically
+    + Similar to AdamW but without built-in weight decay
+  ]
+]
+
+#title-slide[
+  Comparison of Results
 ]
 
 // --- QUANTITATIVE RESULTS ---
@@ -200,7 +231,7 @@
 #slide(title: "Visual Comparison: Pretrained vs From Scratch (1/2)", outlined: true)[
   #figure(
     image("images/predictions1.png", width: 70%),
-    caption: [Predictions comparison — pretrained (top) vs from-scratch (bottom)],
+    caption: [Predictions comparison : pretrained (top) vs from-scratch (bottom)],
   )
 ]
 
@@ -208,88 +239,35 @@
 #slide(title: "Visual Comparison: Pretrained vs From Scratch (2/2)", outlined: true)[
   #figure(
     image("images/predictions2.png", width: 70%),
-    caption: [Predictions comparison — pretrained (top) vs from-scratch (bottom)],
+    caption: [Predictions comparison : pretrained (top) vs from-scratch (bottom)],
   )
 ]
 
-// ============================================================
-#title-slide[
-  From-Scratch U-Net
-]
 
-// --- WHY FROM SCRATCH? ---
-#slide(title: "From-Scratch U-Net: Motivation", outlined: true)[
-  In parallel, we trained a *custom U-Net implemented entirely from scratch* in PyTorch, without any pretrained backbone.
-
-  *Goal:* measure the actual contribution of transfer learning by comparing both approaches under identical conditions.
-
-  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
-    *Dataset:*
-    + 40,000 paired image/mask samples
-    + Same 512x512 resolution
-    + Same augmentation pipeline
-
-    *Why is this harder without pretraining?*
-    + The model must learn all visual features from zero
-    + Edges, textures, shapes, human contours: nothing is given
-    + Requires more data and more epochs to reach the same quality
-  ][
-    #framed(title: "Key difference vs pretrained")[
-      The pretrained model starts with 21.8M parameters already tuned on 1.2M images. The from-scratch model starts with *31M parameters* all randomly initialized, and must discover structure entirely from the training data.
+#slide(title: "Models & Dataset Comparison")[
+  #align(center)[
+    #framed(back-color: rgb("f0f0f0"))[
+      #figure(
+        image("images/dice.png", width: 70%),
+        caption: [Performances per dataset illustrated],
+      )
     ]
   ]
 ]
 
-// --- ARCHITECTURE FROM SCRATCH ---
-#slide(title: "Custom U-Net Architecture", outlined: true)[
-  *Encoder (4 stages, custom ConvBlocks):*
-  + Input: (3, 512, 512) — RGB image
-  + Stage 1: 3 #sym.arrow.r 64 feature maps, 512x512 #sym.arrow.r 256x256
-  + Stage 2: 64 #sym.arrow.r 128 maps, 256x256 #sym.arrow.r 128x128
-  + Stage 3: 128 #sym.arrow.r 256 maps, 128x128 #sym.arrow.r 64x64
-  + Stage 4: 256 #sym.arrow.r 512 maps, 64x64 #sym.arrow.r 32x32
-  + Bottleneck: 512 #sym.arrow.r 1024 maps at 16x16
-
-  Each ConvBlock = Conv2d #sym.arrow.r BatchNorm #sym.arrow.r ReLU #sym.arrow.r Conv2d #sym.arrow.r BatchNorm #sym.arrow.r ReLU
-
-  *Decoder (4 upsampling blocks):*
-  + TransposedConv doubles spatial size at each step
-  + Skip connection concatenates encoder features at each level
-  + Final Conv2d (1x1) #sym.arrow.r Sigmoid #sym.arrow.r binary mask
-
-  #framed(title: "Parameters: 31,043,521")[
-    More parameters than the pretrained model (24.4M), but all initialized randomly — which makes training harder and slower.
-  ]
+// --- DEMO ---
+#title-slide[
+  Demo Time!
 ]
 
-// --- TRAINING CONFIG FROM SCRATCH ---
-#slide(title: "Training Configuration (From Scratch)", outlined: true)[
-  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
-    *Setup:*
-    + Image size: 512x512
-    + Batch size: 16
-    + Max epochs: 50
-    + Early stopping: patience = 5 (stops if *loss* does not improve for 5 consecutive epochs)
-    + Checkpoint saved every epoch, training resumed automatically
-
-    *Loss: BCE + Dice (0.5 / 0.5)*
-    + Same combined loss as the pretrained model
-    + Ensures fair comparison
-  ][
-    *Optimizer: Adam*
-    + Adapts the learning rate per parameter automatically
-    + Similar to AdamW but without built-in weight decay
-
-    *Scheduler: ReduceLROnPlateau*
-    + Monitors the training loss
-    + Halves the learning rate (factor=0.5) if no improvement after 5 epochs
-    + Adapts to stagnation rather than following a fixed cosine curve
-  ]
+#title-slide[
+  Conclusion
 ]
+
 
 // --- CONCLUSION ---
 #slide(title: "Conclusion", outlined: true)[
-  *What we built:* a background remover trained on 34K–40K images using two approaches — U-Net + pretrained ResNet34, and a custom U-Net from scratch.
+  *What we built:* a background remover trained on 34K–40K images using two approaches: U-Net + pretrained ResNet34, and a custom U-Net from scratch.
 
   *Why transfer learning works:*
   + ResNet34 compensates for limited data and trains in ~30 min vs ~23h
@@ -304,5 +282,6 @@
 ]
 
 // Bibliography
-#let bib = bibliography("bibliography.bib")
-#bibliography-slide(bib)
+#slide(title: "References", outlined: true)[
+  #bibliography("bibliography.bib")
+]
