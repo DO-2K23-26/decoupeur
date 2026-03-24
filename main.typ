@@ -22,11 +22,9 @@
 
 #slide(title: "Introduction - What's background removal ?", outlined: true)[
   #figure(
-  image("images/6.jpg", width: 50%),
-  caption: [
-    Foreground extraction of a cat
-  ],
-)
+    image("images/6.jpg", width: 50%),
+    caption: [Foreground extraction of a cat],
+  )
   *Goal* : Isolate an element from an image as accurately as possible
 ]
 
@@ -37,26 +35,21 @@
   - Almost impossible to code an algorithm for every cases.
 ]
 
-
 #table-of-contents()
 
 // ============================================================
 // State of the art
 // ============================================================
 
-
 #slide(title: "State of the art", outlined: true)[
   = Real-Time High-Resolution Background Matting [2020]
   A whitepaper by students at University of Washington
-  
-  #figure(
-  image("images/architecture_state_of_the_art.png", width: 100%),
-  caption: [
-    Architecture of their model
-  ]
-)
-]
 
+  #figure(
+    image("images/architecture_state_of_the_art.png", width: 100%),
+    caption: [Architecture of their model],
+  )
+]
 
 // ============================================================
 #title-slide[
@@ -171,29 +164,11 @@
       #align(center)[
         #figure(
           image("images/dice.png", width: 130%),
-          caption: [
-            Foreground extraction of a cat
-          ],
+          caption: [IoU and Dice illustrated],
         )
       ]
     ]
   ]
-]
-
-// --- QUALITATIVE RESULTS ---
-#slide(title: "Results: Pretrained Model", outlined: true)[
-  *Examples on validation set:*
-
-  #framed(back-color: rgb("f0f0f0"))[
-    #align(center)[
-      _[Placeholder: 4 columns: Input image | Ground Truth mask | Predicted mask | Overlay]_
-      #v(3.5cm)
-    ]
-  ]
-
-  + Sharp and precise contours
-  + Works across varied poses and lighting conditions
-  + Trained in only 16 epochs (~30 minutes on school GPU nodes)
 ]
 
 // --- QUANTITATIVE RESULTS ---
@@ -203,11 +178,11 @@
   #table(
     columns: (2fr, 1fr, 1fr),
     [*Metric*], [*Pretrained*], [*From Scratch*],
-    [IoU], [(to fill)], [(to fill)],
+    [IoU], [0.9856], [0.9826],
     [Dice], [(to fill)], [(to fill)],
     [Pixel Accuracy], [(to fill)], [(to fill)],
-    [Epochs], [16], [(to fill)],
-    [Training time], [~30 min], [(to fill)],
+    [Epochs], [16], [40],
+    [Training time], [~30 min], [~23h],
   )
 
   #framed(title: "Key result")[
@@ -215,73 +190,21 @@
   ]
 ]
 
-// --- VISUAL COMPARISON ---
-#slide(title: "Visual Comparison: Pretrained vs From Scratch", outlined: true)[
-  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
-    *From Scratch:*
-    #framed(back-color: rgb("ffe0e0"))[
-      #align(center)[
-        _[Placeholder: Input | Prediction | Ground Truth]_
-        #v(2.5cm)
-      ]
-      Blurry boundaries, missed details
-    ]
-  ][
-    *Pretrained (ResNet34):*
-    #framed(back-color: rgb("e0ffe0"))[
-      #align(center)[
-        _[Placeholder: Input | Prediction | Ground Truth]_
-        #v(2.5cm)
-      ]
-      Sharp contours, precise mask
-    ]
-  ]
+// --- VISUAL COMPARISON (1/2) ---
+#slide(title: "Visual Comparison: Pretrained vs From Scratch (1/2)", outlined: true)[
+  #figure(
+    image("images/predictions1.png", width: 70%),
+    caption: [Predictions comparison — pretrained (top) vs from-scratch (bottom)],
+  )
 ]
 
-// --- FAILURE CASES ---
-#slide(title: "Failure Cases", outlined: true)[
-  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
-    *Occlusion (overlapping people):*
-    #framed(back-color: rgb("f0f0f0"))[
-      #align(center)[
-        _[Placeholder: failed example]_
-        #v(2cm)
-      ]
-      IoU: (to fill)
-    ]
-  ][
-    *Low contrast (blending into background):*
-    #framed(back-color: rgb("f0f0f0"))[
-      #align(center)[
-        _[Placeholder: failed example]_
-        #v(2cm)
-      ]
-      IoU: (to fill)
-    ]
-  ]
-
-  Possible improvements: add occlusion examples to training data, fine-tune on hard cases.
+// --- VISUAL COMPARISON (2/2) ---
+#slide(title: "Visual Comparison: Pretrained vs From Scratch (2/2)", outlined: true)[
+  #figure(
+    image("images/predictions2.png", width: 70%),
+    caption: [Predictions comparison — pretrained (top) vs from-scratch (bottom)],
+  )
 ]
-
-// --- CONCLUSION ---
-#slide(title: "Conclusion", outlined: true)[
-  *What we built:* a background remover trained on 34K images using U-Net + pretrained ResNet34 (24.4M parameters).
-
-  *Why it works:*
-  + Transfer learning compensates for limited data and trains in ~30 min
-  + U-Net reconstructs a full-resolution mask via skip connections
-  + Dice + BCE loss handles the extreme imbalance between human and background pixels
-  + IoU is a meaningful metric: not fooled by the dominant background class
-
-  *Results:*
-  + Converges in only 16 epochs
-  + Achieves (to fill)% IoU on validation set
-  + Outperforms from-scratch baseline in both speed and accuracy
-]
-
-// Bibliography
-#let bib = bibliography("bibliography.bib")
-#bibliography-slide(bib)
 
 // ============================================================
 #title-slide[
@@ -358,37 +281,22 @@
   ]
 ]
 
-// --- QUALITATIVE RESULTS FROM SCRATCH ---
-#slide(title: "Results: From-Scratch Model", outlined: true)[
-  *Examples on validation set:*
+// --- CONCLUSION ---
+#slide(title: "Conclusion", outlined: true)[
+  *What we built:* a background remover trained on 34K–40K images using two approaches — U-Net + pretrained ResNet34, and a custom U-Net from scratch.
 
-  #framed(back-color: rgb("f0f0f0"))[
-    #align(center)[
-      _[Placeholder: 3 columns: Input image | Ground Truth mask | Predicted mask]_
-      #v(3.5cm)
-    ]
-  ]
+  *Why transfer learning works:*
+  + ResNet34 compensates for limited data and trains in ~30 min vs ~23h
+  + U-Net reconstructs a full-resolution mask via skip connections
+  + Dice + BCE loss handles the extreme imbalance between human and background pixels
+  + IoU is a meaningful metric: not fooled by the dominant background class
 
-  + Boundaries tend to be less precise than the pretrained model
-  + More training time required to reach comparable quality
-  + Demonstrates the cost of learning everything from zero
+  *Results:*
+  + Pretrained: 0.9856 IoU in only 16 epochs (~30 min)
+  + From scratch: 0.9826 IoU after 40 epochs (~23h)
+  + Transfer learning: *3x faster convergence, same data, better score*
 ]
 
-// --- QUANTITATIVE RESULTS FROM SCRATCH ---
-#slide(title: "Quantitative Results (From Scratch)", outlined: true)[
-  *Metrics on validation set:*
-
-  #table(
-    columns: (2fr, 1fr, 1fr),
-    [*Metric*], [*Pretrained*], [*From Scratch*],
-    [IoU], [0.9856], [0.9826],
-    [Dice], [(to fill)], [(to fill)],
-    [Pixel Accuracy], [(to fill)], [(to fill)],
-    [Epochs trained], [16], [40],
-    [Training time], [~30 min], [~23h],
-  )
-
-  #framed(title: "Takeaway")[
-    The pretrained model reaches competitive IoU in fewer epochs and with less compute, demonstrating the value of transfer learning on limited data.
-  ]
-]
+// Bibliography
+#let bib = bibliography("bibliography.bib")
+#bibliography-slide(bib)
