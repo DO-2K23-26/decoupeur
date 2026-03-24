@@ -75,6 +75,13 @@
 ]
 
 // --- U-NET ARCHITECTURE ---
+#slide(title: "What is U-Net ?", outlined: true)[
+  #figure(
+    image("images/unet.png", width: 70%),
+    caption: [Architecture of U-Net],
+  )
+]
+
 #slide(title: "Why U-Net? Architecture and Layers", outlined: true)[
   *Goal:* for each pixel of a 512x512 image, decide: human (1) or background (0)?
 
