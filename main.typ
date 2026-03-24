@@ -179,8 +179,7 @@
     columns: (2fr, 1fr, 1fr),
     [*Metric*], [*Pretrained*], [*From Scratch*],
     [IoU], [0.9856], [0.9826],
-    [Dice], [(to fill)], [(to fill)],
-    [Pixel Accuracy], [(to fill)], [(to fill)],
+    [Dice], [0.9927], [0.9912],
     [Epochs], [16], [40],
     [Training time], [~30 min], [~23h],
   )
