@@ -45,8 +45,8 @@
 // ============================================================
 
 #slide(title: "State of the art", outlined: true)[
-  = Real-Time High-Resolution Background Matting [2020]
-  Soumyadip Sengupta and Vivek Jayaram and Brian Curless and Steve Seitz and Ira Kemelmacher-Shlizerman #cite(<BMSengupta20>)
+  = Real-Time High-Resolution Background Matting [2020]@BMSengupta20
+  Soumyadip Sengupta and Vivek Jayaram and Brian Curless and Steve Seitz and Ira Kemelmacher-Shlizerman
 
   #figure(
     image("images/architecture_state_of_the_art.png", width: 100%),
