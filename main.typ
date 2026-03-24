@@ -169,8 +169,12 @@
   ][
     #framed(back-color: rgb("f0f0f0"))[
       #align(center)[
-        _[Placeholder: diagram showing two overlapping shapes, one labeled "Predicted", one "Ground Truth". Highlight the intersection in green and the union in blue. Show formula: IoU = green area / blue area]_
-        #v(4cm)
+        #figure(
+          image("images/dice.png", width: 130%),
+          caption: [
+            Foreground extraction of a cat
+          ],
+        )
       ]
     ]
   ]
