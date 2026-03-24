@@ -278,3 +278,113 @@
 // Bibliography
 #let bib = bibliography("bibliography.bib")
 #bibliography-slide(bib)
+
+// ============================================================
+#title-slide[
+  From-Scratch U-Net
+]
+
+// --- WHY FROM SCRATCH? ---
+#slide(title: "From-Scratch U-Net: Motivation", outlined: true)[
+  In parallel, we trained a *custom U-Net implemented entirely from scratch* in PyTorch, without any pretrained backbone.
+
+  *Goal:* measure the actual contribution of transfer learning by comparing both approaches under identical conditions.
+
+  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
+    *Dataset:*
+    + 40,000 paired image/mask samples
+    + Same 512x512 resolution
+    + Same augmentation pipeline
+
+    *Why is this harder without pretraining?*
+    + The model must learn all visual features from zero
+    + Edges, textures, shapes, human contours: nothing is given
+    + Requires more data and more epochs to reach the same quality
+  ][
+    #framed(title: "Key difference vs pretrained")[
+      The pretrained model starts with 21.8M parameters already tuned on 1.2M images. The from-scratch model starts with *31M parameters* all randomly initialized, and must discover structure entirely from the training data.
+    ]
+  ]
+]
+
+// --- ARCHITECTURE FROM SCRATCH ---
+#slide(title: "Custom U-Net Architecture", outlined: true)[
+  *Encoder (4 stages, custom ConvBlocks):*
+  + Input: (3, 512, 512) — RGB image
+  + Stage 1: 3 #sym.arrow.r 64 feature maps, 512x512 #sym.arrow.r 256x256
+  + Stage 2: 64 #sym.arrow.r 128 maps, 256x256 #sym.arrow.r 128x128
+  + Stage 3: 128 #sym.arrow.r 256 maps, 128x128 #sym.arrow.r 64x64
+  + Stage 4: 256 #sym.arrow.r 512 maps, 64x64 #sym.arrow.r 32x32
+  + Bottleneck: 512 #sym.arrow.r 1024 maps at 16x16
+
+  Each ConvBlock = Conv2d #sym.arrow.r BatchNorm #sym.arrow.r ReLU #sym.arrow.r Conv2d #sym.arrow.r BatchNorm #sym.arrow.r ReLU
+
+  *Decoder (4 upsampling blocks):*
+  + TransposedConv doubles spatial size at each step
+  + Skip connection concatenates encoder features at each level
+  + Final Conv2d (1x1) #sym.arrow.r Sigmoid #sym.arrow.r binary mask
+
+  #framed(title: "Parameters: 31,043,521")[
+    More parameters than the pretrained model (24.4M), but all initialized randomly — which makes training harder and slower.
+  ]
+]
+
+// --- TRAINING CONFIG FROM SCRATCH ---
+#slide(title: "Training Configuration (From Scratch)", outlined: true)[
+  #cols(columns: (1fr, 1fr), gutter: 1.5em)[
+    *Setup:*
+    + Image size: 512x512
+    + Batch size: 16
+    + Max epochs: 50
+    + Early stopping: patience = 5 (stops if *loss* does not improve for 5 consecutive epochs)
+    + Checkpoint saved every epoch, training resumed automatically
+
+    *Loss: BCE + Dice (0.5 / 0.5)*
+    + Same combined loss as the pretrained model
+    + Ensures fair comparison
+  ][
+    *Optimizer: Adam*
+    + Adapts the learning rate per parameter automatically
+    + Similar to AdamW but without built-in weight decay
+
+    *Scheduler: ReduceLROnPlateau*
+    + Monitors the training loss
+    + Halves the learning rate (factor=0.5) if no improvement after 5 epochs
+    + Adapts to stagnation rather than following a fixed cosine curve
+  ]
+]
+
+// --- QUALITATIVE RESULTS FROM SCRATCH ---
+#slide(title: "Results: From-Scratch Model", outlined: true)[
+  *Examples on validation set:*
+
+  #framed(back-color: rgb("f0f0f0"))[
+    #align(center)[
+      _[Placeholder: 3 columns: Input image | Ground Truth mask | Predicted mask]_
+      #v(3.5cm)
+    ]
+  ]
+
+  + Boundaries tend to be less precise than the pretrained model
+  + More training time required to reach comparable quality
+  + Demonstrates the cost of learning everything from zero
+]
+
+// --- QUANTITATIVE RESULTS FROM SCRATCH ---
+#slide(title: "Quantitative Results (From Scratch)", outlined: true)[
+  *Metrics on validation set:*
+
+  #table(
+    columns: (2fr, 1fr, 1fr),
+    [*Metric*], [*Pretrained*], [*From Scratch*],
+    [IoU], [0.9856], [0.9826],
+    [Dice], [(to fill)], [(to fill)],
+    [Pixel Accuracy], [(to fill)], [(to fill)],
+    [Epochs trained], [16], [40],
+    [Training time], [~30 min], [~23h],
+  )
+
+  #framed(title: "Takeaway")[
+    The pretrained model reaches competitive IoU in fewer epochs and with less compute, demonstrating the value of transfer learning on limited data.
+  ]
+]
